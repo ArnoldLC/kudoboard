@@ -47,3 +47,15 @@ Este kudoboard fue hecho para una entrevista técnica, la cual demuestra mis hab
     `
             php artisan passport:install
     `
+
+8. Por último ejectuar:
+
+    `
+            php artisan serve
+    `
+
+    y
+
+    `
+            npm run serve
+    `
