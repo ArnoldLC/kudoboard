@@ -1,17 +1,42 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="">
+    <b-navbar type="dark" variant="dark">
+      <div class="container">
+        <b-navbar-brand href="/">KUDOBOARD</b-navbar-brand>
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <!-- <b-collapse id="nav-collapse" class="ml-auto" is-nav> -->
+          <b-navbar-nav>
+            <b-nav-item to="/login" v-if="!loggedIn">Login</b-nav-item>
+            <b-nav-item to="/register" v-if="!loggedIn">Register</b-nav-item>
+            <b-button v-else variant="danger" size="sm" @click="logout">Cerrar sesión</b-button>
+          </b-navbar-nav>
+        <!-- </b-collapse> -->
+      </div>
+    </b-navbar>
+    <div class="">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  computed: {
+    ...mapGetters(['loggedIn'])
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+        .then(res => {
+          console.log(res)
+          this.$router.push('/login')
+        }).catch(err => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>

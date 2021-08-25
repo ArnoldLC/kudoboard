@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
+use App\Models\Kudoboard;
+use App\Models\Kudo;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -41,4 +44,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function kudoboards() {
+        return $this->hasMany(Kudoboard::class);
+    }
+
+    public function kudos() {
+        return $this->hasMany(Kudo::class);
+    }
 }
