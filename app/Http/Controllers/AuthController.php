@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -62,6 +63,34 @@ class AuthController extends Controller
         return response()->json([
             "user" => auth()->user(),
             "token" => $token
+        ]);
+    }
+
+    public function me (Request $request) {
+        if( !Auth::check() ) {
+            return response()->json([
+                "message" => "Usuario no autenticado"
+            ], 401);
+        }
+
+        $user = auth()->user();
+        $token = auth()->user()->createToken('Laravel Password Grant Client')->accessToken;
+        return response()->json([
+            "user" => $user,
+            "token" => $token
+        ]);
+    }
+
+    public function logout() {
+        if( !Auth::check() ) {
+            return response()->json([
+                "message" => "Usuario no autenticado"
+            ], 401);
+        }
+
+        Auth::user()->AuthAccessToken()->delete();
+        return response()->json([
+            "message" => "Su sesión a terminado"
         ]);
     }
 }
