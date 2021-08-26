@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KudoboardController;
 use App\Http\Controllers\KudoController;
+use App\Http\Controllers\SharedKudoboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +42,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/kudoboard/{id}/kudo', [KudoController::class, 'createKudo']);
     Route::delete('/kudo/{kudo_id}', [KudoController::class, 'deleteKudo']);
     Route::put('/kudo/{kudo_id}', [KudoController::class, 'editarKudo']);
+
+    Route::get('/shared-kudoboard', [SharedKudoboardController::class, 'getSharedKudoboards']);
+    Route::get('/shared-kudoboard/{id}', [SharedKudoboardController::class, 'getSharedKudoboard']);
 });

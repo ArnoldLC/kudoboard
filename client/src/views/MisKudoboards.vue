@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-    <div class="container mt-3">
+    <div class="container mt-3 mb-4">
       <div class="row">
         <div class="col-6 mx-auto" v-for="(kudoboard, index) in kudoboards" :key="index">
           <b-card no-body class="overflow-hidden p-2">
@@ -19,6 +19,28 @@
                 <b-button variant="info" @click="openModalEditarKudoboard(kudoboard)">Editar</b-button>
                 <b-button variant="danger" @click="eliminarKudoboard(kudoboard)">Eliminar</b-button>
                 <b-button variant="warning" :to="`/kudoboard/${kudoboard.id}`">Dar kudo</b-button>
+              </div>
+            </div>
+          </b-card>
+        </div>
+      </div>
+    </div>
+    <div class="container" v-if="sharedKudoboards.length !== 0">
+      <div class="row">
+        <div class="col d-flex justify-content-between align-items-center border-bottom">
+          <h1 class="pb-2">Kudoboards compartidos conmigo</h1>
+        </div>
+      </div>
+    </div>
+    <div class="container mt-3 mb-4">
+      <div class="row">
+        <div class="col-6 mx-auto" v-for="(sharedKudoboard, index) in sharedKudoboards" :key="index">
+          <b-card no-body class="overflow-hidden p-2">
+            <div class="d-flex">
+              <img src="https://lorempixel.com/80/80" alt="" class="img-thumbnail">
+              <div class="ms-2">
+                <h4>{{ sharedKudoboard.kudoboard.titulo }}</h4>
+                <b-button variant="warning" :to="`/shared-kudoboard/${sharedKudoboard.kudoboard.id}`">Dar kudo</b-button>
               </div>
             </div>
           </b-card>
@@ -57,6 +79,7 @@
 <script>
 import axios from '../axios'
 import KudoboardService from '../services/KudoboardService'
+import SharedKudoboardService from '../services/SharedKudoboardService'
 export default {
   data() {
     return {
@@ -66,11 +89,14 @@ export default {
       },
       kudoboards: [],
       showModalEditarKudoboard: false,
-      kudoboardService: new KudoboardService()
+      kudoboardService: new KudoboardService(),
+      sharedKudoboardService: new SharedKudoboardService(),
+      sharedKudoboards: []
     }
   },
   created() {
     this.fetchKudoboards()
+    this.fetchSharedKudoboards()
   },
   methods: {
     fetchKudoboards() {
@@ -136,6 +162,14 @@ export default {
         }).catch(err => {
           console.log(err)
         })
+    },
+    fetchSharedKudoboards() {
+      const sharedKudoboards = this.sharedKudoboardService.getSharedKudoboards()
+      sharedKudoboards.then(res => {
+        this.sharedKudoboards = res.shared_kudoboards
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }

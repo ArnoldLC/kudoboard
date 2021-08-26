@@ -44,7 +44,7 @@ export default class KudoService {
 
   deleteKudo( kudo_id ) {
     return new Promise((resolve, reject) => {
-      axios.get(`/kudo/${kudo_id}`)
+      axios.delete(`/kudo/${kudo_id}`)
         .then(res => {
           // console.log(res)
           resolve(res.data)

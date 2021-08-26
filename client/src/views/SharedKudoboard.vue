@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="bg-light">
+    <div class="bg-light mb-4">
       <div class="container">
         <div class="row py-4">
           <div class="col">
@@ -14,7 +14,6 @@
         <div class="row">
           <div class="col">
             <b-button variant="primary" v-b-modal.bv-modal-nuevo-kudo>Dar Kudo</b-button>
-            <b-button variant="warning">Compartir</b-button>
           </div>
         </div>
       </div>
@@ -45,63 +44,41 @@
         </div>
       </b-form>
     </b-modal>
-    <b-modal v-model="showModalEditarKudo" id="bv-modal-editar-kudo" title="Editar Kudo" centered hide-footer>
-      <b-form @submit.prevent="editarKudo">
-        <b-form-group label="Descripción" class="mb-3">
-          <b-form-input v-model="kudo.descripcion" required></b-form-input>
-        </b-form-group>
-        <div class="text-center">
-          <b-button type="submit" variant="primary" class="w-100">Editar Kudo</b-button>
-        </div>
-      </b-form>
-    </b-modal>
   </div>
 </template>
 
 <script>
-import KudoboardService from '../services/KudoboardService'
+import SharedKudoboardService from '../services/SharedKudoboardService'
 import KudoService from '../services/KudoService'
-
 import { mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
-      kudoboardService: new KudoboardService(),
+      sharedKudoboardService: new SharedKudoboardService(),
       kudoService: new KudoService(),
       kudoboard: {},
       kudos: [],
       kudo: {
         descripcion: null
-      },
-      showModalEditarKudo: false
+      }
     }
   },
   computed: {
     ...mapGetters(['user'])
   },
   created() {
-    this.fetchKudoboard()
+    this.fetchSharedKudoboard(this.$route.params.id)
   },
   methods: {
-    fetchKudoboard() {
-      let kudoboard = this.kudoboardService.getKudoboard(this.$route.params.id)
-      kudoboard.then(({ kudoboard }) => {
-        this.kudoboard = kudoboard
-        this.fetchKudos(kudoboard.id)
-        // console.log(kudoboard)
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    fetchKudos(kudoboard_id) {
-      let kudos = this.kudoService.getKudos(kudoboard_id)
-      kudos.then(({ kudos }) => {
-        this.kudos = kudos
-        // console.log(kudos)
-      }).catch(err => {
-        console.log(err)
-      })
+    fetchSharedKudoboard(kudoboard_id) {
+      this.sharedKudoboardService.getSharedKudoboard(kudoboard_id)
+        .then(res => {
+          this.kudoboard = res.shared_kudoboard.kudoboard
+          this.kudos = res.kudos
+        }).catch(err => {
+          console.log(err)
+        })
     },
     crearKudo() {
       let kudo = this.kudoService.crearKudo(this.$route.params.id, {
@@ -111,34 +88,6 @@ export default {
         // console.log(res)
         this.fetchKudos(this.$route.params.id)
         this.$bvModal.hide('bv-modal-nuevo-kudo')
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    openModalEditarKudo(kudo) {
-      this.showModalEditarKudo = true
-      this.kudo = kudo
-    },
-    editarKudo() {
-      let kudo = this.kudoService.editarKudo(this.kudo.id, {
-        descripcion: this.kudo.descripcion
-      })
-      kudo.then(() => {
-        // console.log(res)
-        this.fetchKudos(this.$route.params.id)
-        this.showModalEditarKudo = false
-        this.kudo = {
-          descripcion: null
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    eliminarKudo({ id }) {
-      let kudo = this.kudoService.deleteKudo(id)
-      kudo.then(() => {
-        // console.log(res)
-        this.fetchKudos(this.$route.params.id)
       }).catch(err => {
         console.log(err)
       })

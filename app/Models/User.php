@@ -10,6 +10,7 @@ use Laravel\Passport\HasApiTokens;
 
 use App\Models\Kudoboard;
 use App\Models\Kudo;
+use App\Models\SharedKudoboard;
 
 class User extends Authenticatable
 {
@@ -51,5 +52,9 @@ class User extends Authenticatable
 
     public function kudos() {
         return $this->hasMany(Kudo::class);
+    }
+
+    public  function sharedKudoboards() {
+        return $this->hasMany(SharedKudoboard::class);
     }
 }

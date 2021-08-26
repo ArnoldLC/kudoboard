@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Kudo;
+use App\Models\SharedKudoboard;
 
 class Kudoboard extends Model
 {
@@ -19,5 +20,9 @@ class Kudoboard extends Model
 
     public function kudos() {
         return $this->hasMany(Kudo::class);
+    }
+
+    public function sharedKudoboards() {
+        return $this->hasMany(SharedKudoboard::class);
     }
 }
